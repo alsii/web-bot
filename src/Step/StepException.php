@@ -2,7 +2,6 @@
 namespace Alsi\WebBot\Step;
 
 use RuntimeException;
-use Throwable;
 
 class StepException extends RuntimeException
 {
@@ -18,20 +17,4 @@ class StepException extends RuntimeException
 
     public const CODE_WRONG_HTTP_STATUS = 201;
     public const CODE_WRONG_HTTP_CONTENT = 202;
-
-    public $context = [];
-
-    public function __construct($message = '', $code = 0, Throwable $previous = null, array $context = [])
-    {
-        parent::__construct($message, $code, $previous);
-        $this->context = $context;
-    }
-
-    /**
-     * @return array
-     */
-    public function getContext(): array
-    {
-        return $this->context;
-    }
 }

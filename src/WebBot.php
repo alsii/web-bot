@@ -7,11 +7,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 
-class WebBot
+class WebBot implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    public const LOG_ENTITY_ID = 'entity-id';
     const RESULT_SUCCESSFUL = 'success';
 
     /**
@@ -50,7 +49,6 @@ class WebBot
                 $state = $step->execute($state);
             } catch (StepException $e) {
                 /** @var  $response ResponseInterface */
-                $response = $e->getContext()['response'] ?? null;
                 $responseContent = $response ? $response->getBody()->getContents() : '';
 
                 $this->logger->critical(
