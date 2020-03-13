@@ -12,6 +12,7 @@ class WebBot
     use LoggerAwareTrait;
 
     public const LOG_ENTITY_ID = 'entity-id';
+    const RESULT_SUCCESSFUL = 'success';
 
     /**
      * @var StepInterface[]
@@ -36,9 +37,9 @@ class WebBot
 
     /**
      * @param array $state
-     * @return bool
+     * @return array
      */
-    public function register($state = []): bool
+    public function register($state = []): array
     {
         $logId = $state[self::LOG_ENTITY_ID] ?? null;
         $logContext = $logId ? [self::LOG_ENTITY_ID => $logId] : [];
@@ -58,11 +59,15 @@ class WebBot
                     $logContext
                 );
 
-                return false;
+                $state['web-bot'] = [self::RESULT_SUCCESSFUL => false];
+
+                return $state;
             }
             $this->logger->info('---- Done ' . get_class($step), $logContext);
         }
 
-        return true;
+        $state['web-bot'] = [self::RESULT_SUCCESSFUL => true];
+
+        return $state;
     }
 }
