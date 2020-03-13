@@ -13,10 +13,11 @@ trait StepTrait
     {
         $statusCode = $response->getStatusCode();
         if ($statusCode >= 400) {
-            echo PHP_EOL, 'Response is', PHP_EOL, $response->getBody()->getContents(), PHP_EOL;
             throw new StepException(
                 "Wrong HTTP Status code ($statusCode)",
-                StepException::CODE_WRONG_HTTP_STATUS
+                StepException::CODE_WRONG_HTTP_STATUS,
+                null,
+                ['response' => $response],
             );
         }
     }
