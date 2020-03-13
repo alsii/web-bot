@@ -1,23 +1,36 @@
 <?php
 namespace Alsi\WebBot\Step;
 
+use Alsi\WebBot\LoggerAwareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DomCrawler\Crawler;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 
 trait StepTrait
 {
+    use LoggerAwareTrait;
+
+    public function __construct()
+    {
+        $this->logger = new NullLogger();
+    }
+
     /**
      * @param ResponseInterface $response
+     * @param string $logEntityId
      */
-    protected function checkStatusCode(ResponseInterface $response): void
+    protected function checkStatusCode(ResponseInterface $response, string $logEntityId): void
     {
         $statusCode = $response->getStatusCode();
         if ($statusCode >= 400) {
+            $this->logger->critical(
+                $response->getBody()->getContents(), [LoggerAwareInterface::LOG_ENTITY_ID => $logEntityId]
+            );
+
             throw new StepException(
                 "Wrong HTTP Status code ($statusCode)",
                 StepException::CODE_WRONG_HTTP_STATUS,
-                null,
-                ['response' => $response],
             );
         }
     }
