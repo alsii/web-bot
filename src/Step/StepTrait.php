@@ -1,7 +1,6 @@
 <?php
 namespace Alsi\WebBot\Step;
 
-use Alsi\WebBot\LoggerAwareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Psr\Log\LoggerAwareTrait;
@@ -18,14 +17,14 @@ trait StepTrait
 
     /**
      * @param ResponseInterface $response
-     * @param string $logEntityId
+     * @param array $logContext
      */
-    protected function checkStatusCode(ResponseInterface $response, string $logEntityId): void
+    protected function checkStatusCode(ResponseInterface $response, array $logContext): void
     {
         $statusCode = $response->getStatusCode();
         if ($statusCode >= 400) {
             $this->logger->critical(
-                $response->getBody()->getContents(), [LoggerAwareInterface::LOG_ENTITY_ID => $logEntityId]
+                $response->getBody()->getContents(), $logContext
             );
 
             throw new StepException(
