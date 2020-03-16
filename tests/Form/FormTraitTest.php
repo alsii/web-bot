@@ -71,4 +71,9 @@ class FormTraitTest extends TestCase implements FormInterface
         $result = $this->getHtmlFormData();
         $this->assertEquals('field-1=42%21&field-1=84%21', $result);
     }
+
+    public function testValidate()
+    {
+        $this->assertTrue($this->validate());
+    }
 }
