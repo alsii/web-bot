@@ -110,6 +110,15 @@ trait FormTransformerTrait
     }
 
     /**
+     * @param array $array
+     * @return int
+     */
+    protected static function count_array_elements_plus_one($array): int
+    {
+        return count($array) + 1;
+    }
+
+    /**
      * @param $value
      * @return mixed|null
      */

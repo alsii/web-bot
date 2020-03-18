@@ -73,6 +73,12 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             'processor' => [self::class, 'count_array_elements'],
         ],
         [
+            'name' => 'Field Count',
+            'path' => ['container', 'test-array'],
+            'field' => FormTraitTest::F_COUNT_PLUS_ONE,
+            'processor' => [self::class, 'count_array_elements_PLUS_ONE'],
+        ],
+        [
             'name' => 'Array 1 map',
             'path' => ['container', 'test-map-array'],
             'map' => [
@@ -157,6 +163,7 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                     FormTraitTest::F_HN2 => null,
                     FormTraitTest::F_HNZ2 => null,
                     FormTraitTest::F_COUNT => 2,
+                    FormTraitTest::F_COUNT_PLUS_ONE => 3,
                     FormTraitTest::F_MAP_ARRAY => ['map-value-1', 'map-value-2'],
                     FormTraitTest::F_MAP_FIELD1 => 'map-value-1',
                     FormTraitTest::F_ARRAY1 => 'array-1',
