@@ -170,7 +170,12 @@ trait FormTransformerTrait
         }
 
         if (array_key_exists('field', $cond)) {
-            return $form->getData()[$cond['field']] === $cond['value'];
+            $formData = $form->getData();
+            $field = $cond['field'];
+
+            return array_key_exists('value', $cond)
+                ? !empty($formData[$field]) && $formData[$field] === $cond['value']
+                : !empty($formData[$field]);
         }
 
         if (array_key_exists('path', $cond)) {

@@ -30,6 +30,16 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             'field' => FormTraitTest::F_FIELD_2,
         ],
         [
+            'name' => 'Const 3',
+            'test' => ['field' => FormTraitTest::F_FIELD_1],
+            'const' => ['field' => FormTraitTest::F_FIELD_4, 'value' => 42]
+        ],
+        [
+            'name' => 'Const 3',
+            'test' => ['field' => 'nonexistent-field'],
+            'const' => ['field' => FormTraitTest::F_FIELD_5, 'value' => 42]
+        ],
+        [
             'name' => 'Field 2',
             'test' => ['path' => ['test'], 'value' => 'forty-two'],
             'path' => ['container', 'field-three'],
@@ -158,6 +168,7 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                     FormTraitTest::F_FIELD_1 => 42,
                     FormTraitTest::F_FIELD_2 => 'forty two',
                     FormTraitTest::F_FIELD_3 => '11.03.2020',
+                    FormTraitTest::F_FIELD_4 => 42,
                     FormTraitTest::F_HN1 => '42',
                     FormTraitTest::F_HNZ1 => 'a',
                     FormTraitTest::F_HN2 => null,

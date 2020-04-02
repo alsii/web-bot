@@ -13,6 +13,8 @@ class FormTraitTest extends TestCase implements FormInterface
     public const F_FIELD_1 = 'field-1';
     public const F_FIELD_2 = 'field-2';
     public const F_FIELD_3 = 'field-3';
+    public const F_FIELD_4 = 'field-4';
+    public const F_FIELD_5 = 'field-5';
     public const F_HN1 = 'field-hn1';
     public const F_HNZ1 = 'field-hnz1';
     public const F_HN2 = 'field-hn2';
@@ -31,6 +33,8 @@ class FormTraitTest extends TestCase implements FormInterface
         self::F_FIELD_1,
         self::F_FIELD_2,
         self::F_FIELD_3,
+        self::F_FIELD_4,
+        self::F_FIELD_5,
         self::F_HN1,
         self::F_HNZ1,
         self::F_HN2,
