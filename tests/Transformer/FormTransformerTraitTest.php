@@ -30,6 +30,16 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             'field' => FormTraitTest::F_FIELD_2,
         ],
         [
+            'name' => 'Const 3',
+            'test' => ['field' => FormTraitTest::F_FIELD_1],
+            'const' => ['field' => FormTraitTest::F_FIELD_4, 'value' => 42]
+        ],
+        [
+            'name' => 'Const 3',
+            'test' => ['field' => 'nonexistent-field'],
+            'const' => ['field' => FormTraitTest::F_FIELD_5, 'value' => 42]
+        ],
+        [
             'name' => 'Field 2',
             'test' => ['path' => ['test'], 'value' => 'forty-two'],
             'path' => ['container', 'field-three'],
@@ -71,6 +81,12 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             'path' => ['container', 'test-array'],
             'field' => FormTraitTest::F_COUNT,
             'processor' => [self::class, 'count_array_elements'],
+        ],
+        [
+            'name' => 'Field Count',
+            'path' => ['container', 'test-array'],
+            'field' => FormTraitTest::F_COUNT_PLUS_ONE,
+            'processor' => [self::class, 'count_array_elements_PLUS_ONE'],
         ],
         [
             'name' => 'Array 1 map',
@@ -152,11 +168,13 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                     FormTraitTest::F_FIELD_1 => 42,
                     FormTraitTest::F_FIELD_2 => 'forty two',
                     FormTraitTest::F_FIELD_3 => '11.03.2020',
+                    FormTraitTest::F_FIELD_4 => 42,
                     FormTraitTest::F_HN1 => '42',
                     FormTraitTest::F_HNZ1 => 'a',
                     FormTraitTest::F_HN2 => null,
                     FormTraitTest::F_HNZ2 => null,
                     FormTraitTest::F_COUNT => 2,
+                    FormTraitTest::F_COUNT_PLUS_ONE => 3,
                     FormTraitTest::F_MAP_ARRAY => ['map-value-1', 'map-value-2'],
                     FormTraitTest::F_MAP_FIELD1 => 'map-value-1',
                     FormTraitTest::F_ARRAY1 => 'array-1',

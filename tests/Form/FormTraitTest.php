@@ -13,6 +13,8 @@ class FormTraitTest extends TestCase implements FormInterface
     public const F_FIELD_1 = 'field-1';
     public const F_FIELD_2 = 'field-2';
     public const F_FIELD_3 = 'field-3';
+    public const F_FIELD_4 = 'field-4';
+    public const F_FIELD_5 = 'field-5';
     public const F_HN1 = 'field-hn1';
     public const F_HNZ1 = 'field-hnz1';
     public const F_HN2 = 'field-hn2';
@@ -23,6 +25,7 @@ class FormTraitTest extends TestCase implements FormInterface
     public const F_ARRAY1 = 'field-array1';
     public const F_ARRAY2 = 'field-array2';
     public const F_COUNT = 'field-count';
+    public const F_COUNT_PLUS_ONE = 'field-count-plus-one';
 
     public const WRONG_FIELD = 'field-wrong';
 
@@ -30,6 +33,8 @@ class FormTraitTest extends TestCase implements FormInterface
         self::F_FIELD_1,
         self::F_FIELD_2,
         self::F_FIELD_3,
+        self::F_FIELD_4,
+        self::F_FIELD_5,
         self::F_HN1,
         self::F_HNZ1,
         self::F_HN2,
@@ -40,6 +45,7 @@ class FormTraitTest extends TestCase implements FormInterface
         self::F_ARRAY1,
         self::F_ARRAY2,
         self::F_COUNT,
+        self::F_COUNT_PLUS_ONE,
     ];
 
     public function testSetData()
@@ -70,5 +76,10 @@ class FormTraitTest extends TestCase implements FormInterface
 
         $result = $this->getHtmlFormData();
         $this->assertEquals('field-1=42%21&field-1=84%21', $result);
+    }
+
+    public function testValidate()
+    {
+        $this->assertTrue($this->validate());
     }
 }

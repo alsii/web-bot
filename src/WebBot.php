@@ -3,7 +3,6 @@ namespace Alsi\WebBot;
 
 use Alsi\WebBot\Step\StepException;
 use Alsi\WebBot\Step\StepInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 
@@ -11,7 +10,7 @@ class WebBot implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    const RESULT_SUCCESSFUL = 'success';
+    private const RESULT_SUCCESSFUL = 'success';
 
     /**
      * @var StepInterface[]
@@ -48,12 +47,13 @@ class WebBot implements LoggerAwareInterface
             try {
                 $state = $step->execute($state);
             } catch (StepException $e) {
-                /** @var  $response ResponseInterface */
-                $responseContent = $response ? $response->getBody()->getContents() : '';
+//                /** @var  $response ResponseInterface */
+//                $response = $e->getContext()['response'] ?? null;
+//                $responseContent = $response ? $response->getBody()->getContents() : '';
 
                 $this->logger->critical(
                     'Step Exception(' . $e->getCode() . ') on ' . get_class($step) .
-                    ': ' . $e->getMessage() . PHP_EOL . $responseContent,
+                    ': ' . $e->getMessage(),
                     $logContext
                 );
 
