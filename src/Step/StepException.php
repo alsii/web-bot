@@ -15,6 +15,8 @@ class StepException extends RuntimeException
     public const CODE_NO_ORDER_FORM = 108;
     public const CODE_NO_SHOP_PRODUCT_URL = 109;
 
+    public const CODE_DATA_TRANSFORMATION_ERROR = 150;
+
     public const CODE_WRONG_HTTP_STATUS = 201;
     public const CODE_WRONG_HTTP_CONTENT = 202;
 }
