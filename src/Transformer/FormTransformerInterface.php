@@ -10,4 +10,9 @@ interface FormTransformerInterface
      * @return FormInterface
      */
     public function transform($data): FormInterface;
+
+    /**
+     * @return array
+     */
+    public function getSelectors(): array;
 }

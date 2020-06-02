@@ -148,6 +148,11 @@ trait FormTransformerTrait
         return null;
     }
 
+    public function getSelectors(): array
+    {
+        return [];
+    }
+
     /**
      * @param FormInterface $form
      * @param array $option

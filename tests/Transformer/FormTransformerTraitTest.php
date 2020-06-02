@@ -128,6 +128,10 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
         return $this->transformToForm($data, new FormTraitTest());
     }
 
+    public function testGetSelectors() {
+        $this->assertEquals([], $this->getSelectors());
+    }
+
     /**
      * @param $data
      * @param $expected
