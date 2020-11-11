@@ -19,4 +19,5 @@ class StepException extends RuntimeException
 
     public const CODE_WRONG_HTTP_STATUS = 201;
     public const CODE_WRONG_HTTP_CONTENT = 202;
+    public const CODE_WRONG_HTTP_STATUS_403 = 203;
 }
