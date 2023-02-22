@@ -47,6 +47,13 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             'processor' => [self::class, 'dateProcessor'],
         ],
         [
+            'name' => 'Field 2 strict',
+            'test' => ['path' => ['test-strict'], 'value' => 'forty-two', 'strict' => true],
+            'path' => ['container', 'field-three'],
+            'field' => FormTraitTest::F_FIELD_3,
+            'processor' => [self::class, 'dateProcessor'],
+        ],
+        [
             'name' => 'Field 3',
             'test' => ['processor' => [self::class, 'conditionProcessor'], 'val' => false],
             'path' => ['container', 'field-three'],
@@ -86,7 +93,7 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             'name' => 'Field Count',
             'path' => ['container', 'test-array'],
             'field' => FormTraitTest::F_COUNT_PLUS_ONE,
-            'processor' => [self::class, 'count_array_elements_PLUS_ONE'],
+            'processor' => [self::class, 'count_array_elements_plus_one'],
         ],
         [
             'name' => 'Array 1 map',
@@ -116,6 +123,12 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                 false => null,
             ]
         ],
+        [
+            'name' => 'Test path without value',
+            'test' => ['path' => ['test-empty']],
+            'path' => ['test-empty'],
+            'field' => FormTraitTest::F_TEST_FIELD,
+        ]
     ];
 
     public function conditionProcessor($cond)
@@ -128,7 +141,7 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
         return $this->transformToForm($data, new FormTraitTest());
     }
 
-    public function testGetSelectors() {
+    public function testGetSelectors(): void {
         $this->assertEquals([], $this->getSelectors());
     }
 
@@ -137,7 +150,7 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
      * @param $expected
      * @dataProvider transformSuccessDataProvider
      */
-    public function testTransformSuccess($data, $expected)
+    public function testTransformSuccess($data, $expected): void
     {
         $result = $this->transform($data);
         $this->assertEquals($expected, $result->getData());
@@ -152,6 +165,8 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             'Success 1' => [
                 [
                     'test' => 'forty-two',
+                    'test-strict' => false,
+                    'test-empty' => '42',
                     'container' => [
                         'field-two' => 'forty two',
                         'field-three' => '2020-03-11',
@@ -183,16 +198,53 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                     FormTraitTest::F_MAP_FIELD1 => 'map-value-1',
                     FormTraitTest::F_ARRAY1 => 'array-1',
                     FormTraitTest::F_ARRAY2 => 'array-2',
+                    FormTraitTest::F_TEST_FIELD => '42',
+                ],
+            ],
+            'Success 2' => [
+                [
+                    'test-strict' => false,
+                    'container' => [
+                        'field-two' => 'forty two',
+                        'field-three' => '2020-03-11',
+                        'hausnummer' => '42 a',
+                        'test-map-array' => [
+                            'map-key-1' => true,
+                            'map-key-2' => false,
+                        ],
+                        'map-scalar-1' => true,
+                        'map-scalar-2' => false,
+                        'test-array' => [
+                            FormTraitTest::F_ARRAY1 => 'array-1',
+                            FormTraitTest::F_ARRAY2 => 'array-2',
+                        ]
+                    ]
+                ],
+                [
+                    FormTraitTest::F_FIELD_1 => 42,
+                    FormTraitTest::F_FIELD_2 => 'forty two',
+                    FormTraitTest::F_FIELD_4 => 42,
+                    FormTraitTest::F_HN1 => '42',
+                    FormTraitTest::F_HNZ1 => 'a',
+                    FormTraitTest::F_HN2 => null,
+                    FormTraitTest::F_HNZ2 => null,
+                    FormTraitTest::F_COUNT => 2,
+                    FormTraitTest::F_COUNT_PLUS_ONE => 3,
+                    FormTraitTest::F_MAP_ARRAY => ['map-value-1', 'map-value-2'],
+                    FormTraitTest::F_MAP_FIELD1 => 'map-value-1',
+                    FormTraitTest::F_ARRAY1 => 'array-1',
+                    FormTraitTest::F_ARRAY2 => 'array-2',
                 ],
             ],
         ];
     }
+
     /**
      * @param $data
      * @param $expected
      * @dataProvider transformFailureDataProvider
      */
-    public function testTransformFailure($data, $expected)
+    public function testTransformFailure($data, $expected): void
     {
         $this->expectException($expected['exception']);
         $this->expectExceptionCode($expected['code']);
@@ -207,6 +259,7 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
         return [
             'Failure 1' => [
                 [
+                    'test-strict' => false,
                     'test' => 'forty-two',
                     'container' => [
                         'field-three' => 'forty two',
@@ -219,6 +272,7 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             ],
             'Failure 2' => [
                 [
+                    'test-strict' => false,
                     'test' => 'forty-two',
                     'container' => [
                         'field-two' => 'forty two',
@@ -239,6 +293,29 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                 [
                     'exception' => TransformationException::class,
                     'code' => TransformationException::CODE_UNKNOWN_MAP_KEY,
+                ],
+            ],
+            'Failure 3' => [
+                [
+                    'container' => [
+                        'field-two' => 'forty two',
+                        'field-three' => '2020-03-11',
+                        'hausnummer' => '42 a',
+                        'test-map-array' => [
+                            'map-key-1' => true,
+                            'map-key-2' => false,
+                        ],
+                        'map-scalar-1' => true,
+                        'map-scalar-2' => false,
+                        'test-array' => [
+                            FormTraitTest::F_ARRAY1 => 'array-1',
+                            FormTraitTest::F_ARRAY2 => 'array-2',
+                        ]
+                    ]
+                ],
+                [
+                    'exception' => TransformationException::class,
+                    'code' => TransformationException::CODE_PATH_NOT_EXISTS,
                 ],
             ],
         ];

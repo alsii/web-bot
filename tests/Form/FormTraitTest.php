@@ -27,6 +27,7 @@ class FormTraitTest extends TestCase implements FormInterface
     public const F_COUNT = 'field-count';
     public const F_COUNT_PLUS_ONE = 'field-count-plus-one';
 
+    public const F_TEST_FIELD = 'field-test';
     public const WRONG_FIELD = 'field-wrong';
 
     public const FIELDS = [
@@ -46,6 +47,7 @@ class FormTraitTest extends TestCase implements FormInterface
         self::F_ARRAY2,
         self::F_COUNT,
         self::F_COUNT_PLUS_ONE,
+        self::F_TEST_FIELD,
     ];
 
     public function testSetData()

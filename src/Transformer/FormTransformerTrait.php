@@ -31,6 +31,13 @@ trait FormTransformerTrait
         return $form;
     }
 
+    /**
+     * @param $data
+     * @param $path
+     *
+     * @return mixed
+     * @throws TransformationException
+     */
     public static function getFromPath($data, $path)
     {
         if (empty($path)) {
@@ -51,20 +58,19 @@ trait FormTransformerTrait
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @param FormInterface $form
-     * @param $option
-     * @noinspection NotOptimalIfConditionsInspection
+     * @param array $options
      */
-    private static function transformPathOption($data, FormInterface $form, $option): void
+    private static function transformPathOption(array $data, FormInterface $form, array $options): void
     {
-        $values = self::getFromPath($data, $option['path']);
-        $values = array_key_exists('processor', $option) ? $option['processor']($values) : $values;
+        $values = self::getFromPath($data, $options['path']);
+        $values = array_key_exists('processor', $options) ? $options['processor']($values) : $values;
         if (is_array($values)) {
-            if (array_key_exists('map', $option)) {
+            if (array_key_exists('map', $options)) {
                 $results = [];
                 foreach ($values as $key => $value) {
-                    $results[$option['map'][$key]['field']][] = $option['map'][$key]['value'];
+                    $results[$options['map'][$key]['field']][] = $options['map'][$key]['value'];
                 }
                 foreach ($results as $key => $result) {
                     $form->setField($key, $result);
@@ -74,19 +80,19 @@ trait FormTransformerTrait
                     $form->setField($key, $value);
                 }
             }
-        } elseif (array_key_exists('map', $option)) {
-            if (!array_key_exists((is_bool($values) ? (int) $values : $values), $option['map'])) {
+        } elseif (array_key_exists('map', $options)) {
+            if (!array_key_exists((is_bool($values) ? (int) $values : $values), $options['map'])) {
                 throw new TransformationException(
-                    "Key $values does not exists in map option {$option['name']}",
+                    "Key $values does not exists in map option {$options['name']}",
                     TransformationException::CODE_UNKNOWN_MAP_KEY
                 );
             }
-            $opt = $option['map'][$values];
+            $opt = $options['map'][$values];
             if ($opt !== null) {
                 $form->setField($opt['field'], $opt['value']);
             }
-        } elseif (array_key_exists('field', $option)) {
-            $form->setField($option['field'], $values);
+        } elseif (array_key_exists('field', $options)) {
+            $form->setField($options['field'], $values);
         }
     }
 
@@ -95,7 +101,7 @@ trait FormTransformerTrait
      * @return string
      * @throws Exception
      */
-    public static function dateProcessor($date): string
+    public static function dateProcessor(string $date): string
     {
         return (new DateTime($date))->format('d.m.Y');
     }
@@ -104,7 +110,7 @@ trait FormTransformerTrait
      * @param array $array
      * @return int
      */
-    public static function count_array_elements($array): int
+    public static function count_array_elements(array $array): int
     {
         return count($array);
     }
@@ -113,7 +119,7 @@ trait FormTransformerTrait
      * @param array $array
      * @return int
      */
-    protected static function count_array_elements_plus_one($array): int
+    protected static function count_array_elements_plus_one(array $array): int
     {
         return count($array) + 1;
     }
@@ -163,28 +169,53 @@ trait FormTransformerTrait
     }
 
     /**
-     * @param $cond
+     * @param array $cond
      * @param FormInterface $form
      * @param array $data
      * @return mixed
      */
-    private static function checkCondition($cond, $form, $data)
+    private static function checkCondition(array $cond, FormInterface $form, array $data)
     {
         if (array_key_exists('processor', $cond) && is_callable($cond['processor'])) {
             return $cond['processor']($cond, $form, $data);
         }
 
+        $valueConditionExists = array_key_exists('value', $cond);
+        $strictCheck = $cond['strict'] ?? false;
+
         if (array_key_exists('field', $cond)) {
             $formData = $form->getData();
+
             $field = $cond['field'];
 
-            return array_key_exists('value', $cond)
-                ? !empty($formData[$field]) && $formData[$field] === $cond['value']
-                : !empty($formData[$field]);
+            if (!array_key_exists($field, $formData)) {
+                if ($valueConditionExists && $strictCheck) {
+                    $formClass = get_class($form);
+
+                    throw new TransformationException(
+                        "The field $field is not set in the form $formClass",
+                        TransformationException::CODE_FORM_FIELD_IS_NOT_SET
+                    );
+                }
+
+                return false;
+            }
+
+            return !$valueConditionExists || $formData[$field] === $cond['value'];
         }
 
         if (array_key_exists('path', $cond)) {
-            return self::getFromPath($data, $cond['path']) === $cond['value'];
+            try {
+                $value = self::getFromPath($data, $cond['path']);
+            } catch (TransformationException $e) {
+                if ($valueConditionExists && $strictCheck) {
+                    throw $e;
+                }
+
+                return false;
+            }
+
+            return !$valueConditionExists || $value === $cond['value'];
         }
 
         return true;
