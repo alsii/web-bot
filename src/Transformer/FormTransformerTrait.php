@@ -36,10 +36,15 @@ trait FormTransformerTrait
     }
 
     /**
+     * @param $data
+     * @param array $path
+     * @param bool $hasDefault
+     * @param null $default
+     *
      * @throws TransformationException
      * @return mixed
      */
-    public static function getFromPath(array $data, array $path, bool $hasDefault = false, $default=null)
+    public static function getFromPath($data, array $path, bool $hasDefault = false, $default=null)
     {
         if (empty($path)) {
             return $data;
@@ -237,7 +242,7 @@ trait FormTransformerTrait
 
     /**
      * @param FormInterface|null $form
-     * @return $this
+     * @return FormTransformerInterface
      */
     public function setForm(FormInterface $form): FormTransformerInterface
     {
