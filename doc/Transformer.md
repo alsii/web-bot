@@ -67,6 +67,24 @@ use the following transformation
 ]
 ```
 
+##### default
+
+A default value to be used together with the path option only. If the specified path does not exist and 
+the `default` option is specified, a value of the `default` option will be used as a result.
+If the `default` option is not specified and the specified does not exist, the `TransformationException`
+with the code `TransformationException::CODE_PATH_NOT_EXISTS` will be thrown.
+
+###### Example
+
+Value of 42 will be used if the specified path does not exist
+
+```php
+[
+    'path' => ['section', 'subsection', 'theAnswer'],
+    'default' => 42
+]
+```
+
 #### Destination options
 
 One and the only one of the following source options should be provided:

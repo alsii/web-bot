@@ -15,21 +15,36 @@ trait FormTrait
     protected $data;
 
     /**
-     * @param $key
-     * @param $data
-     * @return FormInterface
-     * @noinspection PhpIncompatibleReturnTypeInspection
+     * @var array
      */
-    public function setField($key, $data): FormInterface
+    protected $fieldCodes;
+
+    /**
+     * @var array
+     */
+    protected $valueCodes;
+
+    /**
+     * @param $field
+     * @param $value
+     * @param bool $useCode
+     * @return FormInterface
+     */
+    public function setField($field, $value, bool $useCode=false): FormInterface
     {
-        if (!in_array($key, static::FIELDS, false)) {
+        if ($useCode) {
+            $field = $this->decodeField($field);
+            $value = $this->decodeValue($value);
+        }
+
+        if (!in_array($field, static::FIELDS)) {
             throw new FormException(
-                "Can not add [$key] field. This field is not exist in " . get_class($this),
+                "Can not add [$field] field. This field is not exist in " . get_class($this),
                 FormException::CODE_WRONG_FIELD
             );
         }
 
-        $this->data[$key] = $data;
+        $this->data[$field] = $value;
 
         return $this;
     }
@@ -40,6 +55,13 @@ trait FormTrait
     public function getData(): array
     {
         return $this->data;
+    }
+
+    public function getField($field, $useCode=false)
+    {
+        return $useCode
+            ? $this->encodeValue($this->data[$this->decodeField($field)])
+            : $this->data[$field];
     }
 
     /**
@@ -54,7 +76,7 @@ trait FormTrait
      * @param array $data
      * @return string
      */
-    public static function buildHtmlFormData($data): string
+    public static function buildHtmlFormData(array $data): string
     {
         $vars = [];
         foreach ($data as $id => $it) {
@@ -75,6 +97,74 @@ trait FormTrait
         return true;
     }
 
+    private function decodeField(string $code): string
+    {
+        if (array_key_exists($code, $this->fieldCodes)) {
+            return $this->fieldCodes[$code];
+        }
+
+        throw new FormException(
+            "Can not add field with code [$code]. This field code is not defined in " . get_class($this),
+            FormException::CODE_WRONG_FIELD_CODE
+        );
+    }
+
+    private function decodeValue($code)
+    {
+        if (is_array($code)) {
+            $result = [];
+            foreach ($code  as $scalarCode) {
+                $result[] = $this->decodeScalarValue($scalarCode);
+            }
+
+            return $result;
+        }
+
+        return $this->decodeScalarValue($code);
+    }
+
+    private function decodeScalarValue($code)
+    {
+        if (array_key_exists($code, $this->valueCodes)) {
+            return $this->valueCodes[$code];
+        }
+
+        throw new FormException(
+            "Can not add value with code [$code]. This value code is not defined in " . get_class($this),
+            FormException::CODE_WRONG_VALUE_CODE
+        );
+    }
+
+    private function encodeValue($value)
+    {
+        if (is_array($value)) {
+            $result = [];
+            foreach ($value  as $scalarValue) {
+                $result[] = $this->encodeScalarValue($scalarValue);
+            }
+
+            return $result;
+        }
+
+        return $this->encodeScalarValue($value);
+    }
+
+    /**
+     * @throws FormException
+     */
+    private function encodeScalarValue($value)
+    {
+        $code = array_search($value, $this->valueCodes);
+        if ($code !== false) {
+            return $code;
+        }
+
+        throw new FormException(
+            "Can not found a code for value [$value]. The code for this value is not defined in " . get_class($this),
+            FormException::CODE_WRONG_VALUE
+        );
+    }
+
     /**
      * @param $name
      * @param $value
@@ -83,5 +173,27 @@ trait FormTrait
     private static function htmlFormVar($name, $value): string
     {
         return urlencode($name) . '=' . urlencode($value);
+    }
+
+    /**
+     * @param array $codes
+     * @return $this
+     */
+    public function setFieldCodes(array $codes): self
+    {
+        $this->fieldCodes = $codes;
+
+        return $this;
+    }
+
+    /**
+     * @param array $codes
+     * @return $this
+     */
+    public function setValueCodes(array $codes): self
+    {
+        $this->valueCodes = $codes;
+
+        return $this;
     }
 }

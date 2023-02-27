@@ -5,14 +5,9 @@ use Alsi\WebBot\Form\FormInterface;
 
 interface FormTransformerInterface
 {
-    /**
-     * @param array $data
-     * @return FormInterface
-     */
-    public function transform($data): FormInterface;
+    public function transform(array $data): FormInterface;
 
-    /**
-     * @return array
-     */
     public function getSelectors(): array;
+
+    public function setForm(FormInterface $form): FormTransformerInterface;
 }
