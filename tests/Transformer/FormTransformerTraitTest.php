@@ -128,6 +128,12 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             'test' => ['path' => ['test-empty']],
             'path' => ['test-empty'],
             'field' => FormTraitTest::F_TEST_FIELD,
+        ],
+        [
+            'name' => 'Default value',
+            'path' => ['nonexistent-field'],
+            'default' => 'default-value',
+            'field' => FormTraitTest::F_DEFAULT,
         ]
     ];
 
@@ -143,6 +149,12 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
 
     public function testGetSelectors(): void {
         $this->assertEquals([], $this->getSelectors());
+    }
+
+    public function testSetForm(): void
+    {
+        $result = $this->setForm(new FormTraitTest());
+        $this->assertEquals($this, $result);
     }
 
     /**
@@ -199,6 +211,7 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                     FormTraitTest::F_ARRAY1 => 'array-1',
                     FormTraitTest::F_ARRAY2 => 'array-2',
                     FormTraitTest::F_TEST_FIELD => '42',
+                    FormTraitTest::F_DEFAULT => 'default-value',
                 ],
             ],
             'Success 2' => [
@@ -234,6 +247,8 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                     FormTraitTest::F_MAP_FIELD1 => 'map-value-1',
                     FormTraitTest::F_ARRAY1 => 'array-1',
                     FormTraitTest::F_ARRAY2 => 'array-2',
+                    FormTraitTest::F_DEFAULT => 'default-value',
+
                 ],
             ],
         ];

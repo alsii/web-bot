@@ -25,6 +25,8 @@ class CodeProvider
     public const F_COUNT_PLUS_ONE = 'count_plus_one';
     public const F_TEST_FIELD = 'test_field';
 
+    public const F_DEFAULT = 'default';
+
     public const V_FORTY_TWO = 'fourty-two';
     public const V_FORTY_TWO_EXCL = 'fourty-two-excl';
     public const V_EIGHTY_FOUR = 'eighty-four';

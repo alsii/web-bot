@@ -27,13 +27,17 @@ trait FormTrait
     /**
      * @param $field
      * @param $value
-     * @param bool $useCode
+     * @param bool $fieldIsCode
+     * @param bool $valueIsCode
      * @return FormInterface
      */
-    public function setField($field, $value, bool $useCode=false): FormInterface
+    public function setField($field, $value, bool $fieldIsCode=false, bool $valueIsCode=false): FormInterface
     {
-        if ($useCode) {
+        if ($fieldIsCode) {
             $field = $this->decodeField($field);
+        }
+
+        if ($valueIsCode) {
             $value = $this->decodeValue($value);
         }
 
@@ -57,10 +61,21 @@ trait FormTrait
         return $this->data;
     }
 
-    public function getField($field, $useCode=false)
+    public function getField($field, $fieldIsCode=false, $valueIsCode=false)
     {
-        return $useCode
-            ? $this->encodeValue($this->data[$this->decodeField($field)])
+        if ($fieldIsCode) {
+            $field = $this->decodeField($field);
+        }
+
+        if (!in_array($field, static::FIELDS)) {
+            throw new FormException(
+                "Can not get [$field] field. This field is not exist in " . get_class($this),
+                FormException::CODE_WRONG_FIELD
+            );
+        }
+
+        return $valueIsCode
+            ? $this->encodeValue($this->data[$field])
             : $this->data[$field];
     }
 
@@ -97,6 +112,11 @@ trait FormTrait
         return true;
     }
 
+    public function getSelectors(): array
+    {
+        return [];
+    }
+
     private function decodeField(string $code): string
     {
         if (array_key_exists($code, $this->fieldCodes)) {
@@ -109,7 +129,7 @@ trait FormTrait
         );
     }
 
-    private function decodeValue($code)
+    public function decodeValue($code)
     {
         if (is_array($code)) {
             $result = [];

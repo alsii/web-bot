@@ -66,7 +66,7 @@ trait FormTransformerTrait
         return self::getFromPath($data[$head], $path, $hasDefault, $default);
     }
 
-    private static function transformPathOption(array $data, FormInterface $form, array $options, bool $useCode=false): void
+    private static function transformPathOption(array $data, FormInterface $form, array $options, bool $useFieldCode=false): void
     {
         $values = array_key_exists('default', $options)
             ? self::getFromPath($data, $options['path'], true, $options['default'])
@@ -76,16 +76,10 @@ trait FormTransformerTrait
 
         if (is_array($values)) {
             if (array_key_exists('map', $options)) {
-                $results = [];
-                foreach ($values as $key => $value) {
-                    $results[$options['map'][$key]['field']][] = $options['map'][$key]['value'];
-                }
-                foreach ($results as $key => $result) {
-                    $form->setField($key, $result, $useCode);
-                }
+                self::transformArrayAsMap($values, $options['map'], $form, $useFieldCode);
             } else {
                 foreach ($values as $key => $value) {
-                    $form->setField($key, $value, $useCode);
+                    $form->setField($key, $value, $useFieldCode);
                 }
             }
         } elseif (array_key_exists('map', $options)) {
@@ -97,10 +91,11 @@ trait FormTransformerTrait
             }
             $opt = $options['map'][$values];
             if ($opt !== null) {
-                $form->setField($opt['field'], $opt['value'], $useCode);
+                $useValueCode = array_key_exists('code', $opt);
+                $form->setField($opt['field'], $opt[$useValueCode ? 'code': 'value'], $useFieldCode, $useValueCode);
             }
         } elseif (array_key_exists('field', $options)) {
-            $form->setField($options['field'], $values, $useCode);
+            $form->setField($options['field'], $values, $useFieldCode);
         }
     }
 
@@ -202,7 +197,8 @@ trait FormTransformerTrait
 
                     throw new TransformationException(
                         "The field $field is not set in the form $formClass",
-                        TransformationException::CODE_FORM_FIELD_IS_NOT_SET
+                        TransformationException::CODE_FORM_FIELD_IS_NOT_SET,
+                        $e
                     );
                 }
                  return false;
@@ -238,6 +234,19 @@ trait FormTransformerTrait
         }
 
         return true;
+    }
+
+    private static function transformArrayAsMap(array $values, array $map, FormInterface $form, bool $useFieldCode): void
+    {
+        $results = [];
+        foreach ($values as $key => $value) {
+            $useValueCode = array_key_exists('code', $map[$key]);
+            $results[$map[$key]['field']]['value'][] = $map[$key][$useValueCode ? 'code' : 'value'];
+            $results[$map[$key]['field']]['useValueCode'] = $useValueCode;
+        }
+        foreach ($results as $key => $result) {
+            $form->setField($key, $result['value'], $useFieldCode, $result['useValueCode']);
+        }
     }
 
     /**

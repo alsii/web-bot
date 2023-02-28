@@ -28,6 +28,7 @@ class FormTraitTest extends TestCase implements FormInterface
     public const F_COUNT = 'field-count';
     public const F_COUNT_PLUS_ONE = 'field-count-plus-one';
 
+    public const F_DEFAULT = 'field-default';
     public const F_TEST_FIELD = 'field-test';
     public const WRONG_FIELD = 'field-wrong';
 
@@ -49,6 +50,7 @@ class FormTraitTest extends TestCase implements FormInterface
         self::F_COUNT,
         self::F_COUNT_PLUS_ONE,
         self::F_TEST_FIELD,
+        self::F_DEFAULT,
     ];
 
     public const FIELD_CODES = [
@@ -69,6 +71,7 @@ class FormTraitTest extends TestCase implements FormInterface
         CP::F_COUNT => self::F_COUNT,
         CP::F_COUNT_PLUS_ONE => self::F_COUNT_PLUS_ONE,
         CP::F_TEST_FIELD => self::F_TEST_FIELD,
+        CP::F_DEFAULT => self::F_DEFAULT,
     ];
 
     private const V_FORTY_TWO = 42;
@@ -108,39 +111,42 @@ class FormTraitTest extends TestCase implements FormInterface
         $data = $this->getField(self::F_FIELD_1);
         $this->assertEquals(self::V_FORTY_TWO, $data);
 
+        $data = $this->getField(CP::F_FIELD_1, true, true);
+        $this->assertEquals(CP::V_FORTY_TWO, $data);
+
         $this->expectException(FormException::class);
         $this->setField(self::WRONG_FIELD, 1);
     }
 
     public function testSetGetDataCode(): void
     {
-        $this->setField(CP::F_FIELD_1, CP::V_FORTY_TWO, true);
+        $this->setField(CP::F_FIELD_1, CP::V_FORTY_TWO, true, true);
 
         $data = $this->getField(self::F_FIELD_1);
         $this->assertEquals(self::V_FORTY_TWO, $data);
 
-        $data = $this->getField(CP::F_FIELD_1, true);
+        $data = $this->getField(CP::F_FIELD_1, true, true);
         $this->assertEquals(CP::V_FORTY_TWO, $data);
 
-        $this->setField(CP::F_FIELD_1, [CP::V_FORTY_TWO, CP::V_EIGHTY_FOUR], true);
+        $this->setField(CP::F_FIELD_1, [CP::V_FORTY_TWO, CP::V_EIGHTY_FOUR], true, true);
 
         $data = $this->getField(self::F_FIELD_1);
         $this->assertEquals([self::V_FORTY_TWO, self::V_EIGHTY_FOUR], $data);
 
-        $data = $this->getField(CP::F_FIELD_1, true);
+        $data = $this->getField(CP::F_FIELD_1, true, true);
         $this->assertEquals([CP::V_FORTY_TWO, CP::V_EIGHTY_FOUR], $data);
     }
 
     public function testExceptionBySetWrongFieldCode(): void
     {
         $this->expectException(FormException::class);
-        $this->setField(self::WRONG_FIELD, 1, true);
+        $this->setField(self::WRONG_FIELD, 1, true, true);
     }
 
     public function testExceptionBySetWrongValueCode(): void
     {
         $this->expectException(FormException::class);
-        $this->setField(CP::F_FIELD_1, 1, true);
+        $this->setField(CP::F_FIELD_1, 1, true, true);
     }
 
     public function testExceptionByGetWrongValueCode(): void
@@ -148,7 +154,7 @@ class FormTraitTest extends TestCase implements FormInterface
         $this->setField(self::F_FIELD_1, 1);
 
         $this->expectException(FormException::class);
-        $this->getField(CP::F_FIELD_1, true);
+        $this->getField(CP::F_FIELD_1, true, true);
     }
 
     public function testGetDataDirect(): void
@@ -161,7 +167,7 @@ class FormTraitTest extends TestCase implements FormInterface
 
     public function testGetDataCode(): void
     {
-        $this->setField(CP::F_FIELD_1, CP::V_FORTY_TWO_EXCL, true);
+        $this->setField(CP::F_FIELD_1, CP::V_FORTY_TWO_EXCL, true, true);
 
         $result = $this->getData();
         $this->assertEquals([self::F_FIELD_1 => self::V_FORTY_TWO_EXCL], $result);
@@ -182,12 +188,12 @@ class FormTraitTest extends TestCase implements FormInterface
 
     public function testGetHtmlDataCode(): void
     {
-        $this->setField(CP::F_FIELD_1, CP::V_FORTY_TWO_EXCL, true);
+        $this->setField(CP::F_FIELD_1, CP::V_FORTY_TWO_EXCL, true, true);
 
         $result = $this->getHtmlFormData();
         $this->assertEquals('field-1=42%21', $result);
 
-        $this->setField(CP::F_FIELD_1, [CP::V_FORTY_TWO_EXCL, CP::V_EIGHTY_FOUR_EXCL], true);
+        $this->setField(CP::F_FIELD_1, [CP::V_FORTY_TWO_EXCL, CP::V_EIGHTY_FOUR_EXCL], true, true);
 
         $result = $this->getHtmlFormData();
         $this->assertEquals('field-1=42%21&field-1=84%21', $result);
