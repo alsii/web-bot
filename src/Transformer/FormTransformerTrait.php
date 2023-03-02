@@ -79,7 +79,7 @@ trait FormTransformerTrait
                 self::transformArrayAsMap($values, $options['map'], $form, $useFieldCode);
             } else {
                 foreach ($values as $key => $value) {
-                    $form->setField($key, $value, $useFieldCode);
+                    $form->setField($key, $value);
                 }
             }
         } elseif (array_key_exists('map', $options)) {
