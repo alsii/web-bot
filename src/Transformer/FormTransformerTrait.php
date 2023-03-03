@@ -23,7 +23,7 @@ trait FormTransformerTrait
             if (array_key_exists('path', $option)) {
                 self::transformPathOption($data, $form, $option, $useCode);
             } elseif (array_key_exists('const', $option)) {
-                self::transformConstOption($form, $option);
+                self::transformConstOption($form, $option, $useCode);
             } else {
                 throw new TransformationException(
                     'Wrong option provided: neither PATH, nor CONST',
