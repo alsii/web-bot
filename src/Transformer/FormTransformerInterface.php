@@ -11,5 +11,5 @@ interface FormTransformerInterface
 
     public function setForm(FormInterface $form): FormTransformerInterface;
 
-    public function getForm(): FormInterface;
+    public function getForm(): ?FormInterface;
 }
