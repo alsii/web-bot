@@ -13,5 +13,9 @@ interface FormInterface
 
     public function getSelectors(): array;
 
+    public function decodeField(string $code);
+
+    public function decodeValue($code);
+
     public function validate();
 }

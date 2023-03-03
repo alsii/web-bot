@@ -117,7 +117,7 @@ trait FormTrait
         return [];
     }
 
-    private function decodeField(string $code): string
+    public function decodeField(string $code): string
     {
         if (array_key_exists($code, $this->fieldCodes)) {
             return $this->fieldCodes[$code];
