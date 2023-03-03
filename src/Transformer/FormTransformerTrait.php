@@ -259,4 +259,9 @@ trait FormTransformerTrait
 
         return $this;
     }
+
+    public function getForm(): ?FormInterface
+    {
+        return $this->form;
+    }
 }

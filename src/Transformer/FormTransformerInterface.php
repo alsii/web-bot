@@ -10,4 +10,6 @@ interface FormTransformerInterface
     public function getSelectors(): array;
 
     public function setForm(FormInterface $form): FormTransformerInterface;
+
+    public function getForm(): FormInterface;
 }
