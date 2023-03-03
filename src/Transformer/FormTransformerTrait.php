@@ -167,7 +167,9 @@ trait FormTransformerTrait
      */
     private static function transformConstOption(FormInterface $form, array $option, bool $useCode=false): void
     {
-        $form->setField($option['const']['field'], $option['const']['value'], $useCode);
+        $const = $option['const'];
+        $codeConditionExists = array_key_exists('code', $const);
+        $form->setField($const['field'], $const[$codeConditionExists ? 'code' : 'value'], $useCode, $codeConditionExists);
     }
 
     /**
