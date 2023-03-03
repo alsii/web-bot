@@ -183,16 +183,19 @@ trait FormTransformerTrait
             return $cond['processor']($cond, $form, $data);
         }
 
+        $codeConditionExists = array_key_exists('code', $cond);
         $valueConditionExists = array_key_exists('value', $cond);
+        $condValue = $cond[$codeConditionExists ? 'code' : 'value'];
+
         $strictCheck = $cond['strict'] ?? false;
 
         if (array_key_exists('field', $cond)) {
             $field = $cond['field'];
 
             try {
-                $formValue = $form->getField($field, $useCode);
+                $formValue = $form->getField($field, $useCode, $codeConditionExists);
             } catch (FormException $e) {
-                if ($valueConditionExists && $strictCheck) {
+                if (($valueConditionExists || $codeConditionExists) && $strictCheck) {
                     $formClass = get_class($form);
 
                     throw new TransformationException(
@@ -204,11 +207,9 @@ trait FormTransformerTrait
                  return false;
             }
 
-            if (!$valueConditionExists) {
+            if (!$valueConditionExists && !$codeConditionExists) {
                 return true;
             }
-
-            $condValue = $cond['value'];
 
             return is_array($condValue) ? in_array($formValue, $condValue) : $formValue === $condValue;
         }
@@ -227,8 +228,6 @@ trait FormTransformerTrait
             if (!$valueConditionExists) {
                 return true;
             }
-
-            $condValue = $cond['value'];
 
             return is_array($condValue) ? in_array($dataValue, $condValue) : $dataValue === $condValue;
         }
