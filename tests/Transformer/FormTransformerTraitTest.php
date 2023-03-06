@@ -134,7 +134,57 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             'path' => ['nonexistent-field'],
             'default' => 'default-value',
             'field' => FormTraitTest::F_DEFAULT,
-        ]
+        ],
+        [
+            'name' => 'test operator: same',
+            'test' => ['path' => ['test-op', 'same'], 'value' => 42, 'op' =>'same'],
+            'const' => ['field' => FormTraitTest::F_OP_SAME_FIELD, 'value' => 42]
+        ],
+        [
+            'name' => 'test operator: not-same',
+            'test' => ['path' => ['test-op', 'not-same'], 'value' => 42, 'op' =>'not-same'],
+            'const' => ['field' => FormTraitTest::F_OP_NOTSAME_FIELD, 'value' => 42]
+        ],
+        [
+            'name' => 'test operator: eq',
+            'test' => ['path' => ['test-op', 'eq'], 'value' => 42, 'op' =>'eq'],
+            'const' => ['field' => FormTraitTest::F_OP_EQ_FIELD, 'value' => 42]
+        ],
+        [
+            'name' => 'test operator: neq',
+            'test' => ['path' => ['test-op', 'neq'], 'value' => 42, 'op' =>'neq'],
+            'const' => ['field' => FormTraitTest::F_OP_NEQ_FIELD, 'value' => 42]
+        ],
+        [
+            'name' => 'test operator: lt',
+            'test' => ['path' => ['test-op', 'lt'], 'value' => 42, 'op' =>'lt'],
+            'const' => ['field' => FormTraitTest::F_OP_LT_FIELD, 'value' => 42]
+        ],
+        [
+            'name' => 'test operator: le',
+            'test' => ['path' => ['test-op', 'le'], 'value' => 42, 'op' =>'le'],
+            'const' => ['field' => FormTraitTest::F_OP_LE_FIELD, 'value' => 42]
+        ],
+        [
+            'name' => 'test operator: ge',
+            'test' => ['path' => ['test-op', 'ge'], 'value' => 42, 'op' =>'ge'],
+            'const' => ['field' => FormTraitTest::F_OP_GE_FIELD, 'value' => 42]
+        ],
+        [
+            'name' => 'test operator: gt',
+            'test' => ['path' => ['test-op', 'gt'], 'value' => 42, 'op' =>'gt'],
+            'const' => ['field' => FormTraitTest::F_OP_GT_FIELD, 'value' => 42]
+        ],
+        [
+            'name' => 'test operator: instr',
+            'test' => ['path' => ['test-op', 'instr'], 'value' => 42, 'op' =>'instr'],
+            'const' => ['field' => FormTraitTest::F_OP_INSTR_FIELD, 'value' => 42]
+        ],
+        [
+            'name' => 'test operator: not-instr',
+            'test' => ['path' => ['test-op', 'not-instr'], 'value' => 42, 'op' =>'not-instr'],
+            'const' => ['field' => FormTraitTest::F_OP_NOTINSTR_FIELD, 'value' => 42]
+        ],
     ];
 
     public function conditionProcessor($cond)
@@ -249,6 +299,64 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                     FormTraitTest::F_ARRAY2 => 'array-2',
                     FormTraitTest::F_DEFAULT => 'default-value',
 
+                ],
+            ],
+            'Success 3: Test with OP' => [
+                [
+                    'test-strict' => false,
+                    'container' => [
+                        'field-two' => 'forty two',
+                        'field-three' => '2020-03-11',
+                        'hausnummer' => '42 a',
+                        'test-map-array' => [
+                            'map-key-1' => true,
+                            'map-key-2' => false,
+                        ],
+                        'map-scalar-1' => true,
+                        'map-scalar-2' => false,
+                        'test-array' => [
+                            FormTraitTest::F_ARRAY1 => 'array-1',
+                            FormTraitTest::F_ARRAY2 => 'array-2',
+                        ]
+                    ],
+                    'test-op' => [
+                        'same' => 42,
+                        'not-same' => '42',
+                        'eq' => 42,
+                        'neq' => 43,
+                        'lt' => 41,
+                        'le' => 42,
+                        'ge' => 42,
+                        'gt' => 43,
+                        'instr' => 'the 42 number',
+                        'not-instr' => 'the 41 number',
+                    ],
+                ],
+                [
+                    FormTraitTest::F_FIELD_1 => 42,
+                    FormTraitTest::F_FIELD_2 => 'forty two',
+                    FormTraitTest::F_FIELD_4 => 42,
+                    FormTraitTest::F_HN1 => '42',
+                    FormTraitTest::F_HNZ1 => 'a',
+                    FormTraitTest::F_HN2 => null,
+                    FormTraitTest::F_HNZ2 => null,
+                    FormTraitTest::F_COUNT => 2,
+                    FormTraitTest::F_COUNT_PLUS_ONE => 3,
+                    FormTraitTest::F_MAP_ARRAY => ['map-value-1', 'map-value-2'],
+                    FormTraitTest::F_MAP_FIELD1 => 'map-value-1',
+                    FormTraitTest::F_ARRAY1 => 'array-1',
+                    FormTraitTest::F_ARRAY2 => 'array-2',
+                    FormTraitTest::F_DEFAULT => 'default-value',
+                    FormTraitTest::F_OP_SAME_FIELD => 42,
+                    FormTraitTest::F_OP_NOTSAME_FIELD => 42,
+                    FormTraitTest::F_OP_EQ_FIELD => 42,
+                    FormTraitTest::F_OP_NEQ_FIELD => 42,
+                    FormTraitTest::F_OP_LT_FIELD => 42,
+                    FormTraitTest::F_OP_LE_FIELD => 42,
+                    FormTraitTest::F_OP_GE_FIELD => 42,
+                    FormTraitTest::F_OP_GT_FIELD => 42,
+                    FormTraitTest::F_OP_INSTR_FIELD => 42,
+                    FormTraitTest::F_OP_NOTINSTR_FIELD => 42,
                 ],
             ],
         ];

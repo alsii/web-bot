@@ -32,6 +32,17 @@ class FormTraitTest extends TestCase implements FormInterface
     public const F_TEST_FIELD = 'field-test';
     public const WRONG_FIELD = 'field-wrong';
 
+    public const F_OP_SAME_FIELD = 'field-op-same';
+    public const F_OP_NOTSAME_FIELD = 'field-op-notsame';
+    public const F_OP_EQ_FIELD = 'field-op-eq';
+    public const F_OP_NEQ_FIELD = 'field-op-neq';
+    public const F_OP_LT_FIELD = 'field-op-lt';
+    public const F_OP_LE_FIELD = 'field-op-le';
+    public const F_OP_GE_FIELD = 'field-op-ge';
+    public const F_OP_GT_FIELD = 'field-op-gt';
+    public const F_OP_INSTR_FIELD = 'field-op-instr';
+    public const F_OP_NOTINSTR_FIELD = 'field-op-notinstr';
+
     public const FIELDS = [
         self::F_FIELD_1,
         self::F_FIELD_2,
@@ -51,6 +62,17 @@ class FormTraitTest extends TestCase implements FormInterface
         self::F_COUNT_PLUS_ONE,
         self::F_TEST_FIELD,
         self::F_DEFAULT,
+        self::F_OP_SAME_FIELD,
+        self::F_OP_SAME_FIELD,
+        self::F_OP_NOTSAME_FIELD,
+        self::F_OP_EQ_FIELD,
+        self::F_OP_NEQ_FIELD,
+        self::F_OP_LT_FIELD,
+        self::F_OP_LE_FIELD,
+        self::F_OP_GE_FIELD,
+        self::F_OP_GT_FIELD,
+        self::F_OP_INSTR_FIELD,
+        self::F_OP_NOTINSTR_FIELD,
     ];
 
     public const FIELD_CODES = [

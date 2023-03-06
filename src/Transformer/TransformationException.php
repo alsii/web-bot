@@ -10,6 +10,7 @@ class TransformationException extends RuntimeException
     public const CODE_UNKNOWN_MAP_KEY = 103;
 
     public const CODE_FORM_FIELD_IS_NOT_SET = 104;
+    public const CODE_WRONG_COMPARISON = 105;
 
     public const CODE_UNKNOWN_MIME = 201;
     public const CODE_CAN_NOT_GET_FILE_CONTENT = 201;

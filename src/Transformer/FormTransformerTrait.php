@@ -212,9 +212,10 @@ trait FormTransformerTrait
                 return true;
             }
 
-            $condValue = $cond[$codeConditionExists ? 'code' : 'value'];
+            $condValue = $codeConditionExists ? $form->decodeValue($cond['code']) : $cond['value'];
+            $operator = $cond['op'] ?? 'same';
 
-            return is_array($condValue) ? in_array($formValue, $condValue) : $formValue === $condValue;
+            return self::compareValues($condValue, $formValue, $operator);
         }
 
         if (array_key_exists('path', $cond)) {
@@ -232,12 +233,53 @@ trait FormTransformerTrait
                 return true;
             }
 
-            $condValue = $cond[$codeConditionExists ? 'code' : 'value'];
+            $condValue = $codeConditionExists ? $form->decodeValue($cond['code']) : $cond['value'];
+            $operator = $cond['op'] ?? 'same';
 
-            return is_array($condValue) ? in_array($dataValue, $condValue) : $dataValue === $condValue;
+            return self::compareValues($condValue, $dataValue, $operator);
         }
 
         return true;
+    }
+
+    /**
+     * @param $condValue
+     * @param $formValue
+     * @param $operator
+     * @return bool
+     */
+    private static function compareValues($condValue, $formValue, $operator): bool
+    {
+        if (is_array($condValue)) {
+            return in_array($formValue, $condValue);
+        }
+
+        switch ($operator) {
+            case 'same':
+                return $formValue === $condValue;
+            case 'not-same':
+                return $formValue !== $condValue;
+            case 'eq':
+                /** @noinspection TypeUnsafeComparisonInspection */
+                return $formValue == $condValue;
+            case 'neq':
+                /** @noinspection TypeUnsafeComparisonInspection */
+                return $formValue != $condValue;
+            case 'lt':
+                return $formValue < $condValue;
+            case 'le':
+                return $formValue <= $condValue;
+            case 'ge':
+                return $formValue >= $condValue;
+            case 'gt':
+                return $formValue > $condValue;
+            case 'instr':
+                return strpos($formValue, (string)$condValue) !== false;
+            case 'not-instr':
+                return strpos($formValue, (string)$condValue) === false;
+        }
+
+        throw new TransformationException("Wrong comparison operator specified: $operator", TransformationException::CODE_WRONG_COMPARISON );
     }
 
     private static function transformArrayAsMap(array $values, array $map, FormInterface $form, bool $useFieldCode): void
