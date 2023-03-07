@@ -95,7 +95,8 @@ trait FormTransformerTrait
                 $form->setField($opt['field'], $opt[$useValueCode ? 'code': 'value'], $useFieldCode, $useValueCode);
             }
         } elseif (array_key_exists('field', $options)) {
-            $form->setField($options['field'], $values, $useFieldCode);
+            $useValueCode = $options['value-decode'] ?? false;
+            $form->setField($options['field'], $values, $useFieldCode, $useValueCode);
         }
     }
 
