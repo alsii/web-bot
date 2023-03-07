@@ -9,12 +9,11 @@ namespace Alsi\WebBot\Form;
  */
 trait SubFormTrait
 {
-    protected $data;
+    protected $data = [];
 
     /**
      * @param FormInterface $form
      * @return FormInterface
-     * @noinspection PhpIncompatibleReturnTypeInspection
      */
     public function addSubForm(FormInterface $form): FormInterface
     {
@@ -42,7 +41,7 @@ trait SubFormTrait
 
         $count = $this->data[$sfDef[SubformInterface::SF_TOTAL]]++;
         foreach ($form->getData() as $k => $v) {
-            $this->data["{$count}-{$k}"] = $v;
+            $this->data["$count-$k"] = $v;
         }
 
         return $this;

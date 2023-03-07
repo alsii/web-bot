@@ -12,17 +12,17 @@ trait FormTrait
     /**
      * @var array
      */
-    protected $data;
+    protected $data = [];
 
     /**
      * @var array
      */
-    protected $fieldCodes;
+    protected $fieldCodes = [];
 
     /**
      * @var array
      */
-    protected $valueCodes;
+    protected $valueCodes = [];
 
     /**
      * @param $field
@@ -69,8 +69,15 @@ trait FormTrait
 
         if (!in_array($field, static::FIELDS)) {
             throw new FormException(
-                "Can not get [$field] field. This field is not exist in " . get_class($this),
+                "Can not get [$field] field. This field not exists in " . get_class($this),
                 FormException::CODE_WRONG_FIELD
+            );
+        }
+
+        if (!array_key_exists($field, $this->data)) {
+            throw new FormException(
+                "Can not get [$field] field. This field exists in " . get_class($this) . 'but not set',
+                FormException::CODE_FIELD_VALUE_NOT_SET
             );
         }
 
@@ -155,7 +162,7 @@ trait FormTrait
         );
     }
 
-    private function encodeValue($value)
+    public function encodeValue($value)
     {
         if (is_array($value)) {
             $result = [];
@@ -172,7 +179,7 @@ trait FormTrait
     /**
      * @throws FormException
      */
-    private function encodeScalarValue($value)
+    public function encodeScalarValue($value)
     {
         $code = array_search($value, $this->valueCodes);
         if ($code !== false) {

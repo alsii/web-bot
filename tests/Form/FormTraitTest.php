@@ -179,6 +179,12 @@ class FormTraitTest extends TestCase implements FormInterface
         $this->getField(CP::F_FIELD_1, true, true);
     }
 
+    public function testExceptionByGetFieldNotSet(): void
+    {
+        $this->expectException(FormException::class);
+        $this->getField(CP::F_FIELD_1, true, true);
+    }
+
     public function testGetDataDirect(): void
     {
         $this->setField(self::F_FIELD_1, '42!');
@@ -224,5 +230,11 @@ class FormTraitTest extends TestCase implements FormInterface
     public function testValidate(): void
     {
         $this->assertTrue($this->validate());
+    }
+
+    public function testGetSelectors(): void
+    {
+        $selectors = $this->getSelectors();
+        $this->assertEquals([], $selectors);
     }
 }
