@@ -1,7 +1,7 @@
 {
     "name": "alsi/web-bot",
     "description": "Web bot",
-    "version": "0.2.12",
+    "version": "0.2.13",
     "type": "library",
     "license": "proprietary",
     "require": {
