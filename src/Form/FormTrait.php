@@ -31,7 +31,7 @@ trait FormTrait
      * @param bool $valueIsCode
      * @return FormInterface
      */
-    public function setField($field, $value, bool $fieldIsCode=false, bool $valueIsCode=false): FormInterface
+    public function setField($field, $value, bool $fieldIsCode=false, bool $valueIsCode=false, $addToField=false): FormInterface
     {
         if ($fieldIsCode) {
             $field = $this->decodeField($field);
@@ -48,7 +48,12 @@ trait FormTrait
             );
         }
 
-        $this->data[$field] = $value;
+        if ($addToField) {
+            $this->data[$field] = (array) $this->data[$field];
+            $this->data[$field][] = $value;
+        } else {
+            $this->data[$field] = $value;
+        }
 
         return $this;
     }

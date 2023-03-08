@@ -201,6 +201,15 @@ class FormTraitTest extends TestCase implements FormInterface
         $this->assertEquals([self::F_FIELD_1 => self::V_FORTY_TWO_EXCL], $result);
     }
 
+    public function testAddToFieldOption(): void
+    {
+        $this->setField(CP::F_FIELD_1, CP::V_FORTY_TWO, true, true);
+        $this->setField(CP::F_FIELD_1, CP::V_EIGHTY_FOUR, true, true, true);
+
+        $result = $this->getField(CP::F_FIELD_1, true, true);
+        $this->assertEquals([CP::V_FORTY_TWO, CP::V_EIGHTY_FOUR], $result);
+    }
+
     public function testGetHtmlDataDirect(): void
     {
         $this->setField(self::F_FIELD_1, '42!');

@@ -170,7 +170,13 @@ trait FormTransformerTrait
     {
         $const = $option['const'];
         $codeConditionExists = array_key_exists('code', $const);
-        $form->setField($const['field'], $const[$codeConditionExists ? 'code' : 'value'], $useCode, $codeConditionExists);
+        $form->setField(
+            $const['field'],
+            $const[$codeConditionExists ? 'code' : 'value'],
+            $useCode,
+            $codeConditionExists,
+            $const['add'] ?? false,
+        );
     }
 
     /**
