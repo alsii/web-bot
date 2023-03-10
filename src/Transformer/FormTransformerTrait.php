@@ -197,6 +197,8 @@ trait FormTransformerTrait
 
         $strictCheck = $cond['strict'] ?? false;
 
+        $existenceOp = $cond['exists'] ?? true;
+
         if (array_key_exists('field', $cond)) {
             $field = $cond['field'];
 
@@ -212,11 +214,12 @@ trait FormTransformerTrait
                         $e
                     );
                 }
-                 return false;
+
+                return !$existenceOp;
             }
 
             if (!$valueConditionExists && !$codeConditionExists) {
-                return true;
+                return $existenceOp;
             }
 
             $condValue = $codeConditionExists ? $form->decodeValue($cond['code']) : $cond['value'];
@@ -233,11 +236,11 @@ trait FormTransformerTrait
                     throw $e;
                 }
 
-                return false;
+                return !$existenceOp;
             }
 
             if (!$valueConditionExists && !$codeConditionExists) {
-                return true;
+                return $existenceOp;
             }
 
             $condValue = $codeConditionExists ? $form->decodeValue($cond['code']) : $cond['value'];

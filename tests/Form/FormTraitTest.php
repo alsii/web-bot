@@ -43,6 +43,8 @@ class FormTraitTest extends TestCase implements FormInterface
     public const F_OP_INSTR_FIELD = 'field-op-instr';
     public const F_OP_NOTINSTR_FIELD = 'field-op-notinstr';
 
+    public const F_NONEXISTENT_FIELD = 'field-nonexistent';
+
     public const FIELDS = [
         self::F_FIELD_1,
         self::F_FIELD_2,
@@ -73,6 +75,7 @@ class FormTraitTest extends TestCase implements FormInterface
         self::F_OP_GT_FIELD,
         self::F_OP_INSTR_FIELD,
         self::F_OP_NOTINSTR_FIELD,
+        self::F_NONEXISTENT_FIELD,
     ];
 
     public const FIELD_CODES = [

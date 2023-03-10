@@ -136,6 +136,11 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
             'field' => FormTraitTest::F_DEFAULT,
         ],
         [
+            'name' => 'test operator: not-exists',
+            'test' => ['path' => ['test'], 'exists' => false],
+            'const' => ['field' => FormTraitTest::F_NONEXISTENT_FIELD, 'value' => 'not-exists']
+        ],
+        [
             'name' => 'test operator: same',
             'test' => ['path' => ['test-op', 'same'], 'value' => 42, 'op' =>'same'],
             'const' => ['field' => FormTraitTest::F_OP_SAME_FIELD, 'value' => 42]
@@ -298,7 +303,7 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                     FormTraitTest::F_ARRAY1 => 'array-1',
                     FormTraitTest::F_ARRAY2 => 'array-2',
                     FormTraitTest::F_DEFAULT => 'default-value',
-
+                    FormTraitTest::F_NONEXISTENT_FIELD => 'not-exists',
                 ],
             ],
             'Success 3: Test with OP' => [
@@ -357,6 +362,7 @@ class FormTransformerTraitTest extends TestCase implements FormTransformerInterf
                     FormTraitTest::F_OP_GT_FIELD => 42,
                     FormTraitTest::F_OP_INSTR_FIELD => 42,
                     FormTraitTest::F_OP_NOTINSTR_FIELD => 42,
+                    FormTraitTest::F_NONEXISTENT_FIELD => 'not-exists',
                 ],
             ],
         ];
