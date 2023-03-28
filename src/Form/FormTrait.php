@@ -48,7 +48,7 @@ trait FormTrait
             );
         }
 
-        if ($addToField) {
+        if ($addToField && array_key_exists($field, $this->data)) {
             $this->data[$field] = (array) $this->data[$field];
             $this->data[$field][] = $value;
         } else {
